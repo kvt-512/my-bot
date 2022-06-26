@@ -13,10 +13,61 @@ var instructions = $("#recording-instructions");
 var notesList = $("ul#notes");
 
 var noteContent = "";
+let message = "";
 
 // Get all notes from previous sessions and display them.
 //   var notes = getAllNotes();
 //   renderNotes(notes);
+
+/*----------------------------------------------------------------------
+READ OUT LOUD
+-----------------------------------------------------------------------*/
+const msgonend = () => {
+  console.log("stating to recog");
+  noteTextarea.val("");
+  noteContent = "";
+  recognition.start();
+};
+
+const readOutLoud = (message) => {
+  // let speech = new SpeechSynthesisUtterance();
+
+  responsiveVoice.setDefaultVoice("US English Female");
+  responsiveVoice.speak(message, "US English Female", {
+    onend: function () {
+      msgonend();
+    },
+  });
+};
+//----------------------------------------------------------------------
+
+/*----------------------------------------------------------------------
+AXIOS REQUEST
+-----------------------------------------------------------------------*/
+const getData = () => {
+  axios
+    .get(
+      `https://api.scaleserp.com/search?api_key=453B4B60F62C432E986B4C0053F212D1&q=${noteContent}&google_domain=google.co.in&location=Bengaluru,Karnataka,India&gl=in&hl=en`
+      // `https://reqres.in/api/users`
+    )
+    .then((res) => {
+      if (res) {
+        if (res && res.data.answer_box) {
+          if (res && res.data.answer_box.answers) {
+            console.log(res.data.answer_box.answers[0].answer);
+            message = res.data.answer_box.answers[0].answer;
+          }
+        } else {
+          console.log(res.data.organic_results[0].snippet);
+          message = res.data.organic_results[0].snippet;
+        }
+        // res.data.organic_results[res.data.organic_results.length - 1].snippet;
+
+        readOutLoud(message);
+      }
+    });
+};
+//---------------------------------------------------------------------------
 
 /*-----------------------------
         Voice Recognition 
@@ -36,6 +87,7 @@ recognition.onresult = function (event) {
 
   // Get a transcript of what was said.
   var transcript = event.results[current][0].transcript;
+  console.log(event.results[current][0].transcript);
 
   // Add the current transcript to the contents of our Note.
   // There is a weird bug on mobile, where everything is repeated twice.
@@ -47,6 +99,9 @@ recognition.onresult = function (event) {
     noteContent += transcript;
     recognition.stop();
     noteTextarea.val(noteContent);
+    // noteTextarea.val(message);
+
+    getData(noteContent);
   }
 };
 
@@ -57,8 +112,8 @@ recognition.onstart = function () {
 };
 
 recognition.onsoundend = () => {
-  console.log('end')
-}
+  console.log("end");
+};
 
 // recognition.onspeechend = function () {
 //   instructions.text(
@@ -79,17 +134,17 @@ window.onload = function () {
   recognition.start();
 };
 
-$("#start-record-btn").on("click", function (e) {
-  if (noteContent.length) {
-    noteContent += " ";
-  }
-  recognition.start();
-});
+// $("#start-record-btn").on("click", function (e) {
+//   if (noteContent.length) {
+//     noteContent += " ";
+//   }
+//   recognition.start();
+// });
 
-$("#pause-record-btn").on("click", function (e) {
-  recognition.stop();
-  instructions.text("Voice recognition paused.");
-});
+// $("#pause-record-btn").on("click", function (e) {
+//   recognition.stop();
+//   instructions.text("Voice recognition paused.");
+// });
 
 // Sync the text inside the text area with the noteContent variable.
 noteTextarea.on("input", function () {
@@ -138,40 +193,89 @@ noteTextarea.on("input", function () {
         Speech Synthesis 
   ------------------------------*/
 
-function readOutLoud(message) {
-  var speech = new SpeechSynthesisUtterance();
-  // var voices = window.speechSynthesis.getVoices();
+// const readOutLoud = (message) => {
+//   responsiveVoice.setDefaultVoice("US English Female");
+//   responsiveVoice.speak(message);
+// };
 
-  // Set the text and voice attributes.
-  speech.text = message;
-  speech.volume = 1;
-  speech.rate = 1;
-  speech.pitch = 1;
+// function readOutLoud(message) {
+//   var speech = new SpeechSynthesisUtterance();
+//   var voices = window.speechSynthesis.getVoices();
 
-  // speech.voice = voices[2]
-  speech.voice = speechSynthesis.getVoices().filter(function (voice) {
-    return voice.name == "Google UK English Female";
-  })[0];
+//   // Set the text and voice attributes.
+//   speech.text = message;
+//   speech.volume = 1;
+//   speech.rate = 1;
+//   speech.pitch = 1;
 
-  window.speechSynthesis.speak(speech);
+//   speech.voice = voices[2]
+//   speech.voice = speechSynthesis.getVoices().filter(function (voice) {
+//     return voice.name == "Google UK English Female";
+//   })[0];
 
-  speech.onend = () => {
-    recognition.start();
-  };
-}
+//   window.speechSynthesis.speak(speech);
 
-$("#read-note-btn").on("click", function (e) {
-  readOutLoud(noteContent);
-  // recognition.start();
+//   speech.onend = () => {
+//     recognition.start();
+//   };
+// }
+
+/* AXIOS */
+// const getData = () => {
+//   if (noteContent != "") {
+//     console.log(noteContent)
+//     axios
+//       .get(
+//         `https://api.scaleserp.com/search?api_key=CB0C87F01EAB40B89C7B4D3E23D384F1&q=${noteContent}&google_domain=google.co.in&location=Bengaluru,Karnataka,India&gl=in&hl=en`
+//         // `https://reqres.in/api/users`
+//       )
+//       .then((res) => {
+//         if (res) {
+//           if (res && res.data.answer_box) {
+//             if (res && res.data.answer_box.answers) {
+//               console.log(res.data.answer_box.answers[0].answer);
+//               message = res.data.answer_box.answers[0].answer;
+//             }
+//           } else {
+//             console.log(res.data.organic_results[0].snippet);
+//             message = res.data.organic_results[0].snippet;
+//           }
+//           // res.data.organic_results[res.data.organic_results.length - 1].snippet;
+
+//           readOutLoud(message);
+//         }
+//       });
+//   }
+// };
+
+// getData();
+
+// if (noteContent) {
+//   readOutLoud(noteContent);
+// }
+
+// $("#read-note-btn").on("click", function (e) {
+//   readOutLoud(noteContent);
+//   // recognition.start();
+// });
+
+//In-active state reload
+// recognition.onaudioend = () => {
+//   if (!responsiveVoice.isPlaying()) {
+//     setTimeout(() => {
+//       recognition.start();
+//     }, 5000);
+//   }
+// };
+
+recognition.addEventListener("speechend", function () {
+  if (noteContent == "") {
+    console.log("no content");
+    setTimeout(() => {
+      recognition.start();
+    }, 5000);
+  }
 });
-
-//In active state reload
-
-recognition.onaudioend = () => {
-  // setTimeout(() => {
-  //   recognition.start();
-  // }, 5000);
-};
 
 // setTimeout(recognition.start(), 10000)
 
