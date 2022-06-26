@@ -96,12 +96,68 @@ recognition.onresult = function (event) {
     current == 1 && transcript == event.results[0][0].transcript;
 
   if (!mobileRepeatBug) {
-    noteContent += transcript;
+    noteContent += transcript.toLowerCase();
     recognition.stop();
     noteTextarea.val(noteContent);
     // noteTextarea.val(message);
 
-    getData(noteContent);
+    if (noteContent == "hi") {
+      responsiveVoice.speak(
+        "Hi, Iam Reva Bot of Reva University. How can I help you?",
+        "US English Female",
+        {
+          onend: function () {
+            msgonend();
+          },
+        }
+      );
+    } else if (noteContent == "how are you" || noteContent == "how do you do") {
+      responsiveVoice.speak("I am fine. How are you?", "US English Female", {
+        onend: function () {
+          msgonend();
+        },
+      });
+    } else if (noteContent == "where am I") {
+      responsiveVoice.speak(
+        "You are at prestagious Reva University",
+        "US English Female",
+        {
+          onend: function () {
+            msgonend();
+          },
+        }
+      );
+    } else if (noteContent == "i love you") {
+      responsiveVoice.speak("Oh yeah! I love you too", "US English Female", {
+        onend: function () {
+          msgonend();
+        },
+      });
+    } else if (noteContent == "do you love me") {
+      responsiveVoice.speak(
+        "i am very much in love with you",
+        "US English Female",
+        {
+          onend: function () {
+            msgonend();
+          },
+        }
+      );
+    } else if (
+      noteContent == "bye" ||
+      noteContent == "thank you" ||
+      noteContent == "thanks" ||
+      noteContent == "okay bye" ||
+      noteContent == "ok bye"
+    ) {
+      responsiveVoice.speak("have a nice day", "US English Female", {
+        onend: function () {
+          msgonend();
+        },
+      });
+    } else {
+      getData(noteContent);
+    }
   }
 };
 
@@ -131,7 +187,15 @@ recognition.onerror = function (event) {
         App buttons and input 
   ------------------------------*/
 window.onload = function () {
-  recognition.start();
+  responsiveVoice.speak(
+    "Hi, Iam Reva Bot of Reva University. How can I help you?",
+    "US English Female",
+    {
+      onend: function () {
+        msgonend();
+      },
+    }
+  );
 };
 
 // $("#start-record-btn").on("click", function (e) {
