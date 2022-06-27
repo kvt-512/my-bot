@@ -52,16 +52,28 @@ const getData = () => {
     )
     .then((res) => {
       if (res) {
-        if (res && res.data.answer_box) {
-          if (res && res.data.answer_box.answers) {
-            console.log(res.data.answer_box.answers[0].answer);
-            message = res.data.answer_box.answers[0].answer;
-          }
-        } else {
-          console.log(res.data.organic_results[0].snippet);
-          message = res.data.organic_results[0].snippet;
-        }
+        // if (res && res.data.answer_box) {
+        //   if (res && res.data.answer_box.answers) {
+        //     console.log(res.data.answer_box.answers[0].answer);
+        //     message = res.data.answer_box.answers[0].answer;
+        //   }
+        // } else {
+        //   console.log(res.data.organic_results[0].snippet);
+        //   message = res.data.organic_results[0].snippet;
+        // }
         // res.data.organic_results[res.data.organic_results.length - 1].snippet;
+        try{
+          console.log(res.data.answer_box.answers[0].answer);
+          message = res.data.answer_box.answers[0].answer;
+        }catch(err){
+          try{
+            console.log(res.data.organic_results[0].snippet);
+            message = res.data.organic_results[0].snippet;
+          }catch(err){
+            console.log("not found");
+            message="not found";
+          }
+        }
 
         readOutLoud(message);
       }
@@ -101,7 +113,7 @@ recognition.onresult = function (event) {
     noteTextarea.val(noteContent);
     // noteTextarea.val(message);
 
-    if (noteContent == "hi") {
+    if (noteContent == "hi" || noteContent == "hello" || noteContent=="hey") {
       responsiveVoice.speak(
         "Hi, Iam Reva Bot of Reva University. How can I help you?",
         "US English Female",
@@ -337,7 +349,8 @@ recognition.addEventListener("speechend", function () {
     console.log("no content");
     setTimeout(() => {
       recognition.start();
-    }, 5000);
+      // alert("mic turnd off")
+    }, 1000);
   }
 });
 
