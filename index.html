@@ -13,6 +13,23 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     </head>
+    <style>
+        h3{
+            font-size:40px; 
+            font-style:oblique;
+        }
+        textarea{
+            border:2px solid;
+            font-size:30px;
+            font-style:Georgia;
+        }
+        button{
+            margin:10px;
+            width:70%;
+            height:50px;
+            font-size: 30px;
+        }
+    </style>
     <body>
         <div class="container">
 
@@ -27,14 +44,16 @@
                     <h3>Reva Bot</h3>
                 </center>
                 <div class="input-single">
-                    <textarea id="note-textarea" rows="6"></textarea>
+                    <textarea id="note-textarea" rows="8"></textarea>
                 </div>         
-                <button id="start-record-btn" style="margin:10px;" title="Start Recording">Click Me</button>
-                <button id="start-record-btn" style="margin:10px;" title="Start Recording" onclick="window.open('https://revafaq.herokuapp.com','_self')">Open Website</button>
-                <!-- <button id="pause-record-btn" title="Pause Recording">Pause Recognition</button> -->
-                <!-- <button id="save-note-btn" title="Save Note">Save Note</button> -->
-                <!-- <button id="read-note-btn" title="Read">Read</button> -->
-                <!-- <p id="recording-instructions">Press the <strong>Start Recognition</strong> button and allow access.</p> -->
+                <center>
+                    <button id="start-record-btn" style="margin:10px;" title="Start Recording">Force Listen</button><br>
+                    <button id="start-record-btn" style="margin:10px;" title="Start Recording" onclick="window.open('https://revafaq.herokuapp.com','_self')">Open Website</button>
+                    <!-- <button id="pause-record-btn" title="Pause Recording">Pause Recognition</button> -->
+                    <!-- <button id="save-note-btn" title="Save Note">Save Note</button> -->
+                    <!-- <button id="read-note-btn" title="Read">Read</button> -->
+                    <!-- <p id="recording-instructions">Press the <strong>Start Recognition</strong> button and allow access.</p> -->
+                </center>
             </div>
 
         </div>

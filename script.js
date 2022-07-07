@@ -7,6 +7,7 @@ try {
   $(".no-browser-support").show();
   $(".app").hide();
 }
+var ans;
 
 var noteTextarea = $("#note-textarea");
 var instructions = $("#recording-instructions");
@@ -26,6 +27,7 @@ const msgonend = () => {
   console.log("stating to recog");
   noteTextarea.val("");
   noteContent = "";
+  ans = "";
   recognition.start();
 };
 
@@ -47,7 +49,7 @@ AXIOS REQUEST
 const getData = () => {
   axios
     .get(
-      `https://api.scaleserp.com/search?api_key=453B4B60F62C432E986B4C0053F212D1&q=${noteContent}&google_domain=google.co.in&location=Bengaluru,Karnataka,India&gl=in&hl=en`
+      `https://api.scaleserp.com/search?api_key=83C17D10011046EB837362030DB91BC1&q=${noteContent}&google_domain=google.co.in&location=Bengaluru,Karnataka,India&gl=in&hl=en`
       // `https://reqres.in/api/users`
     )
     .then((res) => {
@@ -79,7 +81,8 @@ const getData = () => {
             }
           }
         }
-
+        ans = message;
+        noteTextarea.val("YOU: " + noteContent + "\n\n" + "BOT: " + ans);
         readOutLoud(message);
       }
     });
@@ -115,51 +118,55 @@ recognition.onresult = function (event) {
   if (!mobileRepeatBug) {
     noteContent += transcript.toLowerCase();
     recognition.stop();
-    noteTextarea.val(noteContent);
     // noteTextarea.val(message);
 
-    if (noteContent == "hi" || noteContent == "hello" || noteContent == "hey") {
-      responsiveVoice.speak(
-        "Hi, Iam Reva Bot of Reva University. How can I help you?",
-        "US English Female",
-        {
-          onend: function () {
-            msgonend();
-          },
-        }
-      );
+    if (
+      noteContent == "hi" ||
+      noteContent == "hello" ||
+      noteContent == "hey" ||
+      noteContent == "what is your name"
+    ) {
+      ans = "Hi, Iam Reva Bot of Reva University. How can I help you?";
+      responsiveVoice.speak(ans, "US English Female", {
+        onend: function () {
+          msgonend();
+        },
+      });
     } else if (noteContent == "how are you" || noteContent == "how do you do") {
-      responsiveVoice.speak("I am fine. How are you?", "US English Female", {
+      ans = "I am fine. How are you?";
+      responsiveVoice.speak(ans, "US English Female", {
         onend: function () {
           msgonend();
         },
       });
     } else if (noteContent == "where am I") {
-      responsiveVoice.speak(
-        "You are at prestagious Reva University",
-        "US English Female",
-        {
-          onend: function () {
-            msgonend();
-          },
-        }
-      );
+      ans = "You are at prestagious Reva University";
+      responsiveVoice.speak(ans, "US English Female", {
+        onend: function () {
+          msgonend();
+        },
+      });
     } else if (noteContent == "i love you") {
-      responsiveVoice.speak("Oh yeah! I love you too", "US English Female", {
+      ans = "Oh yeah! I love you too";
+      responsiveVoice.speak(ans, "US English Female", {
         onend: function () {
           msgonend();
         },
       });
     } else if (noteContent == "do you love me") {
-      responsiveVoice.speak(
-        "i am very much in love with you",
-        "US English Female",
-        {
-          onend: function () {
-            msgonend();
-          },
-        }
-      );
+      ans = "i am very much in love with you";
+      responsiveVoice.speak(ans, "US English Female", {
+        onend: function () {
+          msgonend();
+        },
+      });
+    } else if (noteContent == "What is your name" || noteContent == "what's your name") {
+      ans = "my name is reva bot";
+      responsiveVoice.speak(ans, "US English Female", {
+        onend: function () {
+          msgonend();
+        },
+      });
     } else if (
       noteContent == "bye" ||
       noteContent == "thank you" ||
@@ -167,7 +174,8 @@ recognition.onresult = function (event) {
       noteContent == "okay bye" ||
       noteContent == "ok bye"
     ) {
-      responsiveVoice.speak("have a nice day", "US English Female", {
+      ans = "have a nice day";
+      responsiveVoice.speak(ans, "US English Female", {
         onend: function () {
           msgonend();
         },
@@ -175,6 +183,8 @@ recognition.onresult = function (event) {
     } else {
       getData(noteContent);
     }
+
+    noteTextarea.val("YOU: " + noteContent + "\n\n" + "BOT: " + ans);
   }
 };
 
@@ -204,6 +214,7 @@ recognition.onerror = function (event) {
         App buttons and input 
   ------------------------------*/
 window.onload = function () {
+  document.querySelector("#start-record-btn").disabled = true;
   responsiveVoice.speak(
     "Hi, Iam Reva Bot of Reva University. How can I help you?",
     "US English Female",
@@ -215,12 +226,22 @@ window.onload = function () {
   );
 };
 
-// $("#start-record-btn").on("click", function (e) {
-//   if (noteContent.length) {
-//     noteContent += " ";
-//   }
-//   recognition.start();
-// });
+if (noteContent == "") {
+  recognition.onsoundend = () => {
+    console.log("recog stopped");
+    document.querySelector("#start-record-btn").disabled = false;
+  };
+}
+
+$("#start-record-btn").on("click", function (e) {
+  if (noteContent.length) {
+    noteContent += " ";
+  }
+  recognition.start();
+  recognition.onsoundstart = () => {
+    document.querySelector("#start-record-btn").disabled = true;
+  };
+});
 
 // $("#pause-record-btn").on("click", function (e) {
 //   recognition.stop();
