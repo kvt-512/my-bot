@@ -49,7 +49,7 @@ AXIOS REQUEST
 const getData = () => {
   axios
     .get(
-      `https://api.scaleserp.com/search?api_key=83C17D10011046EB837362030DB91BC1&q=${noteContent}&google_domain=google.co.in&location=Bengaluru,Karnataka,India&gl=in&hl=en`
+      `https://api.scaleserp.com/search?api_key=A8A60F4153DD4485BCAAEED1E58E315A&q=${noteContent}&google_domain=google.co.in&location=Bengaluru%2CKarnataka%2CIndia&gl=in&hl=en`
       // `https://reqres.in/api/users`
     )
     .then((res) => {
@@ -69,12 +69,12 @@ const getData = () => {
           message = res.data.answer_box.answers[0].answer;
         } catch (err) {
           try {
-            console.log(res.data.related_questions[0].answer);
-            message = res.data.related_questions[0].answer;
+            console.log(res.data.organic_results[0].snippet);
+            message = res.data.organic_results[0].snippet;
           } catch (err) {
             try {
-              console.log(res.data.organic_results[0].snippet);
-              message = res.data.organic_results[0].snippet;
+              console.log(res.data.related_questions[0].answer);
+              message = res.data.related_questions[0].answer;
             } catch (err) {
               console.log("not found");
               message = "not found";
@@ -234,13 +234,14 @@ if (noteContent == "") {
 }
 
 $("#start-record-btn").on("click", function (e) {
-  if (noteContent.length) {
-    noteContent += " ";
-  }
-  recognition.start();
-  recognition.onsoundstart = () => {
-    document.querySelector("#start-record-btn").disabled = true;
-  };
+  // if (noteContent.length) {
+  //   noteContent += " ";
+  // }
+  // recognition.start();
+  // recognition.onsoundstart = () => {
+  //   document.querySelector("#start-record-btn").disabled = true;
+  // };
+  window.location.reload();
 });
 
 // $("#pause-record-btn").on("click", function (e) {
